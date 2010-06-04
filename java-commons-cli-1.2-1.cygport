@@ -1,0 +1,21 @@
+inherit java
+
+DESCRIPTION="Java command line option parser"
+HOMEPAGE="http://commons.apache.org/cli/"
+SRC_URI="mirror://apache/${ORIG_PN//-//}/source/${P#java-}-src.tar.gz"
+SRC_DIR=${P#java-}-src
+
+src_compile() {
+	lndirs
+	cd ${B}
+	mkdir -p build/classes
+	cygjavac -d build/classes $(find src/java -name '*.java')
+	cygjavadoc -d build/javadoc -sourcepath src/java -subpackages org.apache
+	cygjar cf ${P#java-}.jar -C build/classes org
+}
+
+src_install() {
+	cd ${B}
+	dojar ${P#java-}.jar
+	dojavadoc build/javadoc
+}
